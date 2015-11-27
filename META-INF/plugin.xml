@@ -1,15 +1,24 @@
 <idea-plugin version="2">
   <id>com.moxun.generetor</id>
   <name>JSON Model Generator</name>
-  <version>0.2.0</version>
-  <vendor email="furmint@foxmail.com" url="http://weibo.com/sudale">moxun</vendor>
+  <version>0.2.1</version>
+  <vendor email="furmint@foxmail.com">moxun</vendor>
 
   <description><![CDATA[
-      A JSON model generator<br>
-      <em>enjoy it!</em>
+      A JSON model generator, get json string from URL and transforming it to Java class<br>
+      <br>
+      * Support data conversion library like fastjson.<br>
+      * Support auto implementation Java interface.<br>
+      * Support field type inference.<br><br>
+      <a href="https://github.com/misakuo/JsonModelGenerator">Sourcecode and Tutorial</a><br>
+      <a href="https://github.com/misakuo/JsonModelGenerator/issues">Bug report</a><br>
+      <br><em>enjoy it!</em><br>
+
     ]]></description>
 
   <change-notes><![CDATA[
+      0.2.1<br>
+      <em>add logger, support show log to Event Log</em><br>
       0.2.0<br>
       <em>handle all exception occurred on plugin</em><br>
       0.1.0<br>

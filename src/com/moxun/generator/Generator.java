@@ -13,6 +13,7 @@ public class Generator extends AnAction{
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
         Project project = anActionEvent.getProject();
+        Logger.init();
         GeneratorForm form = new GeneratorForm(project);
         form.show();
     }

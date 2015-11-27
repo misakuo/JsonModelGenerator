@@ -160,16 +160,12 @@ public class GeneratorForm {
             }
             basePath = path + "/";
             pkgText.setText(pkg);
-            log("got path " + path);
+            Logger.info("got path " + path);
         } else {
-            log("got path null");
+            Logger.warn("got path null");
         }
         frame.setAlwaysOnTop(true);
         frame.setVisible(true);
-    }
-
-    private void log(String txt) {
-        System.out.println("Model Generator: " + txt);
     }
 
     private boolean check() {
@@ -278,7 +274,7 @@ public class GeneratorForm {
                     preGen(path.peek());
                     append("\t//TODO: complemented needed maybe\n");
                     append("\n}\n");
-                    log("file " + path.peek() + ".java generate success but maybe have some error");
+                    Logger.warn("file " + path.peek() + ".java generate success but maybe have some error");
                     path.pop();
                 }
             } else if (value instanceof JSONArray) {
@@ -324,10 +320,10 @@ public class GeneratorForm {
         try {
             copyMethods();
         } catch (ClassNotFoundException e) {
-            log("resolving implement failed. " + e.getMessage());
+            Logger.error("resolving implement failed. " + e.getMessage());
         }
         append("\n}\n");
-        log("file " + path.peek() + ".java generate success");
+        Logger.info("file " + path.peek() + ".java generate success");
         if (!path.isEmpty()) {
             path.pop();
         }

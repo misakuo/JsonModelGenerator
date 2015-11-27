@@ -25,21 +25,17 @@ public class HttpHelper {
                     ret = JSONObject.fromObject(data);
                 } catch (Exception e) {
                     ret = null;
-                    log(new StringBuilder().append("parse failed, it maybe not a json string : ").append(data.substring(0,50))
+                    Logger.error(new StringBuilder().append("parse failed, it maybe not a json string : ").append(data.substring(0, 50))
                             .append(" (").append(data.length()).append(" characters more) ……").toString());
                 }
                 return ret;
             } else {
-                log("HTTP GET return " + code);
+                Logger.error("HTTP GET return " + code);
                 return null;
             }
         } catch (IOException e) {
-            log(e.getMessage());
+            Logger.error(e.getMessage());
         }
         return null;
-    }
-
-    private static void log(String txt) {
-        System.out.println("Model Generator [NET]: " + txt);
     }
 }
