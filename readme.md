@@ -23,7 +23,7 @@
 
 ## 图解  
 #### 插件图形界面  
-![图1](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/img/1.png)
+![图1](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/img/1.png)
 
 #### 参数说明  
 - Path：生成的实体类的 .java 文件存放的路径，通过右侧 Select 按钮选择
@@ -40,13 +40,13 @@
 #### 示例  
 现在我们需要访问接口并生成一系列实体类在项目的 com.moxun.generator.gen 目录下，生成的每一个类都需要实现 com.moxun.generator.inter.A 接口  
 
-1. 点击插件图标 ![ICON](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/src/icons/icon.gif) 启动插件  
+1. 点击插件图标 ![ICON](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/src/icons/icon.gif) 启动插件  
 2. 填入参数如下  
-![图2](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/img/2.png)  
+![图2](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/img/2.png)  
   
 3. 点击 Generator   
 4. 生成成功，插件会更新 IDE 的虚拟文件系统，让 IDE 发现生成的文件并在编辑器中打开文件，生成的其中一个文件如下  
-![图3](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/img/3.png)  
+![图3](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/img/3.png)  
 **Excited!**
 
 ## 一些不足  
