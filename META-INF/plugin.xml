@@ -1,0 +1,48 @@
+<idea-plugin version="2">
+  <id>com.moxun.generetor</id>
+  <name>JSON Model Generator</name>
+  <version>0.2.0</version>
+  <vendor email="furmint@foxmail.com" url="http://weibo.com/sudale">moxun</vendor>
+
+  <description><![CDATA[
+      A JSON model generator<br>
+      <em>enjoy it!</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      0.2.0<br>
+      <em>handle all exception occurred on plugin</em><br>
+      0.1.0<br>
+      <em>created.</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="131"/>
+
+  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+  </project-components>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action class="com.moxun.generator.Generator" id="Moxun.generator" text="Model Generator" description="Model Generator doge doge doge" icon="/icons/icon.gif">
+      <add-to-group group-id="MainToolBar" anchor="last"/>
+    </action>
+  </actions>
+
+</idea-plugin>
