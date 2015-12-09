@@ -31,10 +31,9 @@
 - URL：可获取 JSON 字符串的 URL ，只支持 GET 请求，例如 `http://news-at.zhihu.com/api/4/news/latest`
 - Author：作者名称，用在类注释中，默认为当前本机登录的用户名，可自定义
 - package：实体类中的 package 部分，默认会根据 Path 值自动解析，如果解析错误可自定义，形如 `com.example.ui.view`
-- import：实体类中的类 import 部分，多个值用英文逗号隔开，例如 `java.util.List,java.util.TreeMap,com.example.inter.A`
-- implements：实体类中要实现的接口，该接口必须在 import 字段中已被引入，例如要实现 import 字段中引入的 `com.example.inter.A` 接口，此处只需填入 `A` 即可（事实上如果在此处填入完整类路径会导致解析错误）
-- root node：指定开始解析 JSONObject 的根节点，如果不填则解析整个从 URL 返回的 JSONObject ，例如从 URL 返回的 JSONObject 为 a ，而我们需要的数据位于 a 的 data 元素内，则可以在该字段内填入 `data`
-- generator sample：勾选此项后会在 java 实体类中将每个字段对应的返回值以注释的形式附在字段后，例如勾选了此项后生成的实体类中字段声明会是这样 `public long userId;  //eg: 27639372 `
+- Implements：实体类中要实现的接口，例如要实现 import 字段中引入的 `com.example.inter.A` 接口，此处只需填入 `A` 即可（事实上如果在此处填入完整类路径会导致解析错误）
+- Root node：指定开始解析 JSONObject 的根节点，如果不填则解析整个从 URL 返回的 JSONObject ，例如从 URL 返回的 JSONObject 为 a ，而我们需要的数据位于 a 的 data 元素内，则可以在该字段内填入 `data`
+- generate sample：勾选此项后会在 java 实体类中将每个字段对应的返回值以注释的形式附在字段后，例如勾选了此项后生成的实体类中字段声明会是这样 `public long userId;  //eg: 27639372 `
 
 **以上参数中 Path、URL、Author 和 package 为必填参数，其中 Author 和 package 默认会自动生成。剩余三项如果不需要可以留空。**
 

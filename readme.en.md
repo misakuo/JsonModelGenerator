@@ -21,11 +21,11 @@ An code tools plugin for Intellij IDEA platform, using it to transforming JSON s
 - Path：Destination of generating .java file to, set by **Select** button  
 - URL：Plugin will fetching this URL to get JSON string, only GET method supported.  sample: `http://news-at.zhihu.com/api/4/news/latest`
 - Author：Author's name, using in class annotation, default is current login user's name,  you can set another name also.  
-- implements：The java interface's name it will be implemented by generated class, if you want to implement multiple interface, separate them by comma symbol.  such as `Runnable,Serializable` or others interface name you defined.  
-- root node：Define the root node of JSONObject you want to start parsing, parsing whole JSONObject if not setting it, for example, you got JSONObject from URL is `a`, if want to parsing `a.data`, only need to setting this filed to `data`  
-- generator sample：If selected, plugin will generating the value as annotation after filed statement in java class, for example if selected it you will got filed like `public long userId;  // 27639372 ` in class  
+- Implements：The java interface's name it will be implemented by generated class, if you want to implement multiple interface, separate them by comma symbol.  such as `Runnable,Serializable` or others interface name you defined.  
+- Root node：Define the root node of JSONObject you want to start parsing, parsing whole JSONObject if not setting it, for example, you got JSONObject from URL is `a`, if want to parsing `a.data`, only need to setting this filed to `data`  
+- generate sample：If selected, plugin will generating the value as annotation after filed statement in java class, for example if selected it you will got filed like `public long userId;  // 27639372 ` in class  
 
-**In all arguments Path、URL、Author and package is necessary，Author and package will be generating automatically by default. the remaining arguments could be empty if not require.**
+**In all arguments Path、URL、Author and Package is necessary，Author and Package will be generating automatically by default. the remaining arguments could be empty if not require.**
 
 ## Todos  
 1. supporting generating  getter and setter.  
