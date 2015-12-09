@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.moxun.generetor</id>
   <name>JSON Model Generator</name>
-  <version>0.2.1</version>
+  <version>0.3.0</version>
   <vendor email="furmint@foxmail.com">moxun</vendor>
 
   <description><![CDATA[
@@ -17,6 +17,8 @@
     ]]></description>
 
   <change-notes><![CDATA[
+      0.3.0<br>
+      <em>async file writing, fix ClassNotFoundException when class not in classpath, more rubust.</em><br>
       0.2.1<br>
       <em>add logger, support show log to Event Log</em><br>
       0.2.0<br>
@@ -27,7 +29,7 @@
   </change-notes>
 
   <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="131"/>
+  <idea-version since-build="111"/>
 
   <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
        on how to target different products -->
@@ -37,6 +39,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
+      <internalFileTemplate name="common"/>
   </extensions>
 
   <application-components>

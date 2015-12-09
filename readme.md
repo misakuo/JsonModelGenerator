@@ -1,29 +1,29 @@
 # JSON Model Generator  
 
 ## 简介  
-一个Intellij IDEA平台插件，可以快速执行从JSON字符串到Java实体类的转换。
+一个 Intellij IDEA 平台插件，可以快速执行从 JSON 字符串到 Java 实体类的转换。
   
-- 支持从URL获取JSON字符串； 
+- 支持从 URL 获取 JSON 字符串； 
 - 支持字段值类型推断；    
-- 支持默认import和默认接口实现；  
-- 支持将类型为JSONObject和JSONArray的子元素拆分为单独的实体类；
+- 支持默认 import 和默认接口实现；  
+- 支持将类型为 JSONObject 和 JSONArray 的子元素拆分为单独的实体类；
 
 ## 安装  
-1. [从这里](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/blob/master/ModelGenerator.zip)下载ModelGenerator.zip文件  
-2. 打开IDEA（Android Studio或其他JetBrains系的IDE也可以），打开Preferences -> Plugins -> Install plugin from disk... 选择ModelGenerator.zip，添加后重启IDE即可在工具栏上看到插件图标
+1. [从这里](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/blob/master/ModelGenerator.zip)下载 ModelGenerator.zip 文件或在 IDE 中搜索插件 "JSON Model Generator"  
+2. 打开 IDEA（Android Studio或其他JetBrains系的IDE也可以），打开 Preferences -> Plugins -> Install plugin from disk... 选择 ModelGenerator.zip ，添加后重启 IDE 即可在工具栏上看到插件图标
 
 ## 使用  
 这个插件干了也没有什么别的，大概三件事：  
 
-1. 从URL获得JSON字符串，并解析成JSONObject  
-2. 根据用户指定的根节点（如果没有指定则以整个JSONObject的最外层作为根节点），递归解析出每一个Key-Value对，推断Value类型并生成Java成员变量  
+1. 从 URL 获得 JSON 字符串，并解析成 JSONObject  
+2. 根据用户指定的根节点（如果没有指定则以整个 JSONObject 的最外层作为根节点），递归解析出每一个 Key-Value 对，推断 Value 类型并生成 Java 成员变量  
 3. 解析用户指定的需要实现的接口，通过反射得到方法列表、方法修饰符、返回值和参数列表，生成默认方法实现和默认返回值
 
-如果说还有其他的就是生成默认的package字段（根据文件路径判断），生成默认的import区块，生成默认的类注释，实体类生成完之后刷新IDE的虚拟文件系统并在编辑器中打开生成的文件。但这些都是次要的，主要的就是三件事情，很惭愧，就做了一点微小的工作。
+如果说还有其他的就是生成默认的 package 字段（根据文件路径判断），生成默认的 import 区块，生成默认的类注释，实体类生成完之后刷新IDE的虚拟文件系统并在编辑器中打开生成的文件。但这些都是次要的，主要的就是三件事情，很惭愧，就做了一点微小的工作。
 
 ## 图解  
 #### 插件图形界面  
-![图1](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/img/1.png)
+![图1](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/img/1.png)
 
 #### 参数说明  
 - Path：生成的实体类的 .java 文件存放的路径，通过右侧 Select 按钮选择
@@ -40,13 +40,13 @@
 #### 示例  
 现在我们需要访问接口并生成一系列实体类在项目的 com.moxun.generator.gen 目录下，生成的每一个类都需要实现 com.moxun.generator.inter.A 接口  
 
-1. 点击插件图标 ![ICON](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/src/icons/icon.gif) 启动插件  
+1. 点击插件图标 ![ICON](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/src/icons/icon.gif) 启动插件  
 2. 填入参数如下  
-![图2](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/img/2.png)  
+![图2](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/img/2.png)  
   
 3. 点击 Generator   
 4. 生成成功，插件会更新 IDE 的虚拟文件系统，让 IDE 发现生成的文件并在编辑器中打开文件，生成的其中一个文件如下  
-![图3](https://raw.githubusercontent.com/misakuo/JsonModelGenerator/master/img/3.png)  
+![图3](http://gitlab.alibaba-inc.com/moxun.ljf/JsonModelGenerator/raw/master/img/3.png)  
 **Excited!**
 
 ## 一些不足  

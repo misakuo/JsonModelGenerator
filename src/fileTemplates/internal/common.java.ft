@@ -1,0 +1,8 @@
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+
+/**
+ * Author: ${USER}
+ * Created by: ModelGenerator on ${DATE}
+ */
+public class ${NAME} {
+        }
