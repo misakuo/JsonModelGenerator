@@ -1,5 +1,5 @@
 # JSON Model Generator  
-[English](https://github.com/misakuo/JsonModelGenerator/blob/master/readme_en.md)  
+[中文](https://github.com/misakuo/JsonModelGenerator/blob/master/readme.md)
 
 ## 简介  
 一个 Intellij IDEA 平台插件，可以快速执行从 JSON 字符串到 Java 实体类的转换。
