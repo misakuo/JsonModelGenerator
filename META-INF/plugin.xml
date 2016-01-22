@@ -1,10 +1,10 @@
 <idea-plugin version="2">
-  <id>com.moxun.generetor</id>
-  <name>JSON Model Generator</name>
-  <version>0.3.0</version>
-  <vendor email="furmint@foxmail.com">moxun</vendor>
+    <id>com.moxun.generetor</id>
+    <name>JSON Model Generator</name>
+    <version>0.3.1</version>
+    <vendor email="furmint@foxmail.com">moxun</vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       A JSON model generator, get json string from URL and transforming it to Java class<br>
       <br>
       * Support data conversion library like fastjson.<br>
@@ -12,49 +12,60 @@
       * Support field type inference.<br><br>
       <a href="https://github.com/misakuo/JsonModelGenerator">Sourcecode and Tutorial</a><br>
       <a href="https://github.com/misakuo/JsonModelGenerator/issues">Bug report</a><br>
-      <br><em>enjoy it!</em><br>
+      <br>Hope you enjoy it :)<br><br>
 
     ]]></description>
 
-  <change-notes><![CDATA[
-      0.3.0<br>
-      <em>async file writing, fix ClassNotFoundException when class not in classpath, more rubust.</em><br>
-      0.2.1<br>
-      <em>add logger, support show log to Event Log</em><br>
-      0.2.0<br>
-      <em>handle all exception occurred on plugin</em><br>
-      0.1.0<br>
-      <em>created.</em>
+    <change-notes><![CDATA[
+      <b>NEXT</b><br>
+      Support got JSON string from user input;<br>
+      Support parsing JSON Array as root element;<br>
+      Support parsing JSON Array to List<T>;<br>
+      The Chinese Spring Festival is coming,wish you all happy~
+      <br><br>
+      <b>0.3.1</b><br>
+      Building plugin with Java 6, you can using it with JDK1.6 and higher;<br>
+      Bug Fixed, some new feature added.<br>
+      <b>0.3.0</b><br>
+      Async file writing, fix ClassNotFoundException when class not in classpath, more rubust.<br>
+      <b>0.2.1</b><br>
+      Add logger, support show log to Event Log.<br>
+      <b>0.2.0</b><br>
+      Handle all exception occurred on plugin.<br>
+      <b>0.1.0</b><br>
+      Created.<br>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="111"/>
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="111"/>
 
-  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-      <internalFileTemplate name="common"/>
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <internalFileTemplate name="common"/>
+    </extensions>
 
-  <application-components>
-    <!-- Add your application components here -->
-  </application-components>
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
 
-  <project-components>
-    <!-- Add your project components here -->
-  </project-components>
+    <project-components>
+        <!-- Add your project components here -->
+    </project-components>
 
-  <actions>
-    <!-- Add your actions here -->
-    <action class="com.moxun.generator.Generator" id="Moxun.generator" text="Model Generator" description="Model Generator doge doge doge" icon="/icons/icon.gif">
-      <add-to-group group-id="MainToolBar" anchor="last"/>
-    </action>
-  </actions>
+    <actions>
+        <!-- Add your actions here -->
+        <action class="com.moxun.generator.Generator" id="moxun.generator" text="Model Generator"
+                description="Model Generator doge doge doge" icon="/icons/icon.gif">
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
 
 </idea-plugin>

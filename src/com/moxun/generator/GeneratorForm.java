@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import com.intellij.util.FileContentUtil;
 import net.sf.json.JSONObject;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class GeneratorForm {
     private JPanel panel;
 
     private Project project;
-    private List<JTextField> textFields = new ArrayList<>();
+    private List<JTextField> textFields = new ArrayList<JTextField>();
     private String mainClassName, basePath;
     private String[] implement;
 
@@ -147,8 +148,7 @@ public class GeneratorForm {
         VirtualFile virtualFile = FileChooser.chooseFile(descriptor, project, null);
         if (virtualFile != null) {
             PsiDirectory directory = PsiDirectoryFactory.getInstance(project).createDirectory(virtualFile);
-            parser.reset(directory.getName(),project,directory);
-
+            parser.reset(directory.getName(), project, directory);
             String path = virtualFile.getPath();
             String pkg = "";
             dirPath.setText(path);

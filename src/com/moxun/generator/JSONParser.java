@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Created by moxun on 15/12/9.
  */
 public class JSONParser {
-    private Stack<String> path = new Stack<>();
+    private Stack<String> path = new Stack<String>();
     private boolean needGenSample = false;
     private GeneratorEnginer enginer;
 
