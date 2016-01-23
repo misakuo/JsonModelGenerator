@@ -4,7 +4,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Generating code
  * Created by moxun on 15/12/9.
  */
 public class GeneratorEnginer {

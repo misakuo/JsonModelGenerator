@@ -10,6 +10,7 @@ import java.util.Stack;
 import java.util.regex.Pattern;
 
 /**
+ * Parsing json and generating code
  * Created by moxun on 15/12/9.
  */
 public class JSONParser {

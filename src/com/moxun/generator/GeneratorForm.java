@@ -1,5 +1,6 @@
 package com.moxun.generator;
 
+import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -11,15 +12,17 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.util.FileContentUtil;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class GeneratorForm {
     private JTextField urlText;
     private JTextField pkgText;
     private JPanel panel;
+    private JButton gitButton;
+    private JComboBox source;
 
     private Project project;
     private List<JTextField> textFields = new ArrayList<JTextField>();
@@ -47,6 +52,8 @@ public class GeneratorForm {
     private JFrame frame;
 
     private JSONParser parser;
+
+    private String jsonString;
 
 
     public GeneratorForm(Project p_project) {
@@ -86,6 +93,27 @@ public class GeneratorForm {
             });
         }
 
+        urlText.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (source.getSelectedIndex() == 1) {
+                    showInputer();
+                }
+            }
+        });
+
+        source.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (source.getSelectedItem().toString().equals("Input")) {
+                    showInputer();
+                } else {
+                    urlText.setEditable(true);
+                    urlText.setText("");
+                }
+            }
+        });
+
         selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,11 +133,16 @@ public class GeneratorForm {
                         mainClassName = sb.toString();
                     }
 
-                    JSONObject response = HttpHelper.getResponse(urlText.getText());
+                    JSONObject response;
+                    if (source.getSelectedIndex() == 0) {
+                        response = parseString(HttpHelper.getResponse(urlText.getText()));
+                    } else {
+                        response = parseString(jsonString);
+                    }
                     JSONObject dist = null;
 
                     if (response == null) {
-                        Messages.showErrorDialog(project, "Get JSONObject filed, see detail on Event Log", "Error");
+                        Messages.showErrorDialog(project, "Parsing JSON failed, see detail on Event Log", "Error");
                         return;
                     }
 
@@ -141,6 +174,78 @@ public class GeneratorForm {
                 }
             }
         });
+
+        gitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    URI uri = new URI("https://github.com/misakuo/JsonModelGenerator");
+                    Desktop.getDesktop().browse(uri);
+                } catch (URISyntaxException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void showInputer() {
+        frame.setAlwaysOnTop(false);
+        new JSONStringInputer(new JSONStringInputer.CommitCallback() {
+            @Override
+            public void onCommit(String src) {
+                jsonString = src;
+                String snapshot;
+                if (src.length() > 10) {
+                    snapshot = src.substring(0,10);
+                } else {
+                    snapshot = src;
+                }
+                urlText.setText("[JSONString from user input] " + snapshot + " ……");
+                urlText.setEditable(false);
+                frame.setAlwaysOnTop(true);
+            }
+        }).show();
+    }
+
+    private JSONObject parseString(String src) {
+        if (src != null) {
+            if (src.startsWith("{")) {
+                JSONObject ret = null;
+                try {
+                    ret = JSONObject.fromObject(src);
+                } catch (JSONException e) {
+                    Logger.error(e.getMessage());
+                }
+                return ret;
+            } else if (src.startsWith("[")) {
+                JSONArray ret = null;
+                try {
+                    ret = JSONArray.fromObject(src);
+                    for (Object obj : ret) {
+                        if (obj instanceof JSONObject) {
+                            return (JSONObject) obj;
+                        }
+                    }
+                    Logger.error("No JSONObject found on this JSONArray");
+                    return null;
+                } catch (JSONException e) {
+                    Logger.error(e.getMessage());
+                }
+                return null;
+            } else {
+                if (src.length() > 50) {
+                    src = src.substring(0, 50);
+                }
+                Logger.error(new StringBuilder().append("Parse failed, it maybe not a json string : ").append(src)
+                        .append(" (").append(src.length()).append(" characters more) ……").toString());
+                return null;
+            }
+        } else {
+            Logger.error("Input string is null");
+            return null;
+        }
     }
 
     private void showFileChoicer() {

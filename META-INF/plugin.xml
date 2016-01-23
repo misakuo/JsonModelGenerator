@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>com.moxun.generetor</id>
     <name>JSON Model Generator</name>
-    <version>0.3.1</version>
+    <version>0.4.0</version>
     <vendor email="furmint@foxmail.com">moxun</vendor>
 
     <description><![CDATA[
@@ -18,11 +18,12 @@
 
     <change-notes><![CDATA[
       <b>NEXT</b><br>
-      Support got JSON string from user input;<br>
-      Support parsing JSON Array as root element;<br>
       Support parsing JSON Array to List<T>;<br>
       The Chinese Spring Festival is coming,wish you all happy~
       <br><br>
+      <b>0.4.0</b><br>
+      You can specify the source of JSON string by URL or user input now;<br>
+      Parsing JSONArray is supported, plugin will traverse the whole array and finding the first JSONObject child to parsing.<br>
       <b>0.3.1</b><br>
       Building plugin with Java 6, you can using it with JDK1.6 and higher;<br>
       Bug Fixed, some new feature added.<br>

@@ -7,10 +7,11 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import java.io.IOException;
 
 /**
+ * Tool to access URL
  * Created by moxun on 15/11/26.
  */
 public class HttpHelper {
-    public static JSONObject getResponse(String url) {
+    public static String getResponse(String url) {
         String data = null;
         try {
             HttpClient httpClient = new HttpClient();
@@ -20,15 +21,7 @@ public class HttpHelper {
             if (code == 200) {
                 data = httpGet.getResponseBodyAsString();
                 httpGet.releaseConnection();
-                JSONObject ret = null;
-                try {
-                    ret = JSONObject.fromObject(data);
-                } catch (Exception e) {
-                    ret = null;
-                    Logger.error(new StringBuilder().append("parse failed, it maybe not a json string : ").append(data.substring(0, 50))
-                            .append(" (").append(data.length()).append(" characters more) ……").toString());
-                }
-                return ret;
+                return data;
             } else {
                 Logger.error("HTTP GET return " + code);
                 return null;
