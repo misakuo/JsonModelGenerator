@@ -46,30 +46,40 @@ public class GeneratorEnginer {
                     @Override
                     protected void run(@NotNull Result result) throws Throwable {
                         PsiClass dist = dataSet.get(clsName);
-                        PsiField field = factory.createFieldFromText(s, dist);
-                        dist.add(field);
+                        if (s.startsWith("//")) {
+                            // TODO: issues here.
+                            //PsiComment comment = factory.createCommentFromText(s, null);
+                            //dist.add(comment);
+                            Logger.error("Class " + dist.getQualifiedName() + " has no fields, you need checking it maybe.");
+                        } else {
+                            String r = s.replaceAll("-", "_");
+                            PsiField field = factory.createFieldFromText(r, dist);
+                            dist.add(field);
+                        }
                     }
                 }.execute();
             }
         });
     }
 
-    public void preGen(String name) {
+    public void preGen(String name, String last) {
         final PsiFile psiFile = directory.findFile(name + ".java");
+        String clazzName = name;
         if (psiFile != null) {
-            try {
-                ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        psiFile.delete();
+            clazzName = last + name;
+            Logger.warn("File [" + name + ".java" + "] already exists, assign [" + clazzName + "] to current class.");
+            if (directory.findFile(clazzName + ".java") != null) {
+                for (int i = 1; i <= 50; i++) {
+                    if (directory.findFile(clazzName + i + ".java") == null) {
+                        Logger.warn("File [" + clazzName + ".java" + "] already exists, assign [" + clazzName + i + "] to current class.");
+                        clazzName = clazzName + i;
+                        break;
                     }
-                });
-            } catch (Throwable throwable) {
-                Logger.info("Delete action without WriteCommandAction");
+                }
             }
-            Logger.warn("File [" + name + ".java" + "] already exists, delete it.");
         }
-        final PsiClass clazz = JavaDirectoryService.getInstance().createClass(directory, name, "moxun_generator_common");
+
+        final PsiClass clazz = JavaDirectoryService.getInstance().createClass(directory, clazzName, "moxun_generator_common");
         dataSet.put(name, clazz);
         GlobalSearchScope searchScope = GlobalSearchScope.allScope(project);
         if (inters != null) {

@@ -5,7 +5,9 @@ import com.intellij.psi.PsiDirectory;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -15,17 +17,19 @@ import java.util.regex.Pattern;
  */
 public class JSONParser {
     private Stack<String> path = new Stack<String>();
+    private List<String> allNodes = new ArrayList<String>();
     private boolean needGenSample = false;
     private GeneratorEnginer enginer;
 
-    public void reset(String mainClsName,Project proj,PsiDirectory dir) {
+    public void reset(String mainClsName, Project proj, PsiDirectory dir) {
         path.clear();
-        path.push(suffixToUppercase(mainClsName));
-        enginer = new GeneratorEnginer(proj,dir);
+        allNodes.clear();
+        push(suffixToUppercase(mainClsName));
+        enginer = new GeneratorEnginer(proj, dir);
     }
 
-    public void init(String pkg,String[] its) {
-        enginer.init(pkg,its);
+    public void init(String pkg, String[] its) {
+        enginer.init(pkg, its);
     }
 
     public void setGenSample(boolean has) {
@@ -37,19 +41,27 @@ public class JSONParser {
         JSONObject current = null;
         Object value;
         String key;
-        enginer.preGen(path.peek());
+        String last = "";
+        if (path.size() > 1) {
+            last = path.get(path.size() - 2);
+        }
+        enginer.preGen(path.peek(), last);
         while (keys.hasNext()) {
             key = keys.next();
             value = json.get(key);
             if (value instanceof JSONObject) {
                 append("public " + suffixToUppercase(key) + " " + key + ";\n");
-                path.push(suffixToUppercase(key));
+                push(suffixToUppercase(key));
                 current = (JSONObject) value;
                 if (current.keySet().size() > 0) {
                     decodeJSONObject(current);
                 } else {
-                    enginer.preGen(path.peek());
-                    append("//TODO: complemented needed maybe\n");
+                    String last1 = "";
+                    if (path.size() > 1) {
+                        last1 = path.get(path.size() - 2);
+                    }
+                    enginer.preGen(path.peek(), last1);
+                    append("// TODO: complemented needed maybe\n");
                     Logger.warn("file " + path.peek() + ".java generate success but maybe have some error");
                     path.pop();
                 }
@@ -72,12 +84,14 @@ public class JSONParser {
                     //处理对象数组
                     append("public " + suffixToUppercase(key) + "Item[] " + key + ";\n");
                 }
-                path.push(suffixToUppercase(key));
+                push(suffixToUppercase(key));
                 decodeJSONArray((JSONArray) value);
             } else {
                 //处理基本数据类型和String
                 String field = null;
-                if (isNumeric(value.toString())) {
+                if (value == null || String.valueOf(value).equals("")) {
+                    field = "public Object " + key + ";";
+                } else if (isNumeric(value.toString())) {
                     if (value.toString().length() > 6 || key.contains("Id") || key.contains("id")) {
                         field = "public long " + key + ";";
                     } else {
@@ -89,7 +103,12 @@ public class JSONParser {
                     field = "public String " + key + ";";
                 }
                 if (needGenSample) {
-                    field = field + "\t// " + value;
+                    String v = String.valueOf(value);
+                    v = v.replaceAll("\n", "");
+                    if (v.length() > 15) {
+                        v = v.substring(0, 15);
+                    }
+                    field = field + "\t// " + v;
                 }
                 append(field);
             }
@@ -106,10 +125,10 @@ public class JSONParser {
 //        //是否需要遍历？
 //        for (item in jsonArray) {
 //            if (item instanceof JSONObject) {
-//                path.push(path.peek() + "Item")
+//                push(path.peek() + "Item")
 //                decodeJSONObject(item)
 //            } else if (item instanceof JSONArray) {
-//                path.push("array" + index + "->")
+//                push("array" + index + "->")
 //                decodeJSONArray(item)
 //            } else {
 //
@@ -119,11 +138,11 @@ public class JSONParser {
         //数组选择其中一个元素出来进行解析就OK
         Object item = jsonArray.get(0);
         if (item instanceof JSONObject) {
-            path.push(path.peek() + "Item");
+            push(path.peek() + "Item");
             decodeJSONObject((JSONObject) item);
         } else if (item instanceof JSONArray) {
             //多维数组我选择狗带
-            path.push(path.peek() + "Item");
+            push(path.peek() + "Item");
             decodeJSONArray((JSONArray) item);
         } else {
 
@@ -146,6 +165,25 @@ public class JSONParser {
     }
 
     public void append(String field) {
-        enginer.append(field,path.peek());
+        enginer.append(field, path.peek());
+    }
+
+    private void push(String name) {
+        String uniqueName = name;
+        if (allNodes.contains(name)) {
+            uniqueName = path.peek() + name;
+        }
+
+        if (allNodes.contains(uniqueName)) {
+            for (int i = 1; i <= 50; i++) {
+                uniqueName = uniqueName + i;
+                if (!allNodes.contains(uniqueName)) {
+                    break;
+                }
+            }
+        }
+
+        allNodes.add(uniqueName);
+        path.push(uniqueName);
     }
 }

@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.moxun.generetor</id>
   <name>JSON Model Generator</name>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
   <vendor email="furmint@foxmail.com">moxun</vendor>
 
   <description><![CDATA[
@@ -19,8 +19,9 @@
   <change-notes><![CDATA[
       <b>NEXT</b><br>
       Support parsing JSON Array to List<T>;<br>
-      The Chinese Spring Festival is coming,wish you all happy~
       <br><br>
+      <b>0.4.1</b><br>
+      Fixed conflicts of the same name parameter elements,you can using <a href="http://www.mrtao.net/wp-json/posts">this case</a> to testing;<br>
       <b>0.4.0</b><br>
       Fixed crash in Android Studio 2.0 Preview;<br>
       You can specify the source of JSON string by URL or user input now;<br>
