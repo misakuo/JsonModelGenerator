@@ -43,6 +43,9 @@ public class GeneratorForm {
     private JPanel panel;
     private JButton gitButton;
     private JComboBox source;
+    private JRadioButton arrayRadioButton;
+    private JRadioButton listERadioButton;
+    private JLabel status;
 
     private Project project;
     private List<JTextField> textFields = new ArrayList<JTextField>();
@@ -63,6 +66,10 @@ public class GeneratorForm {
         textFields.add(dirPath);
         textFields.add(urlText);
         textFields.add(pkgText);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(arrayRadioButton);
+        group.add(listERadioButton);
 
         parser = new JSONParser();
     }
@@ -124,6 +131,8 @@ public class GeneratorForm {
         generatorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                status.setText("Start generating……");
+                status.paintImmediately(status.getBounds());
                 if (check()) {
                     if (pkgText.getText().split("\\.").length > 0) {
                         String[] tmp = pkgText.getText().split("\\.");
@@ -135,7 +144,11 @@ public class GeneratorForm {
 
                     JSONObject response;
                     if (source.getSelectedIndex() == 0) {
+                        status.setText("Start fetching URL……");
+                        status.paintImmediately(status.getBounds());
                         response = parseString(HttpHelper.getResponse(urlText.getText()));
+                        status.setText("Fetch URL complete.");
+                        status.paintImmediately(status.getBounds());
                     } else {
                         response = parseString(jsonString);
                     }
@@ -154,12 +167,17 @@ public class GeneratorForm {
                         dist = response;
                     }
 
-
                     processImplements();
 
-                    parser.init(pkgText.getText(), implement);
+                    status.setText("Start parsing JSON……");
+                    status.paintImmediately(status.getBounds());
+
+                    parser.init(pkgText.getText(), implement, listERadioButton.isSelected());
                     parser.setGenSample(generatorSampleCheckBox.isSelected());
                     parser.decodeJSONObject(dist);
+
+                    status.setText("Generating complete.");
+                    status.paintImmediately(status.getBounds());
 
                     Messages.showInfoMessage(project, "Generating success!", "Success");
                     frame.dispose();
@@ -198,7 +216,7 @@ public class GeneratorForm {
                 jsonString = src;
                 String snapshot;
                 if (src.length() > 10) {
-                    snapshot = src.substring(0,10);
+                    snapshot = src.substring(0, 10);
                 } else {
                     snapshot = src;
                 }

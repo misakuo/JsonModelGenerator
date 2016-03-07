@@ -20,6 +20,7 @@ public class JSONParser {
     private List<String> allNodes = new ArrayList<String>();
     private boolean needGenSample = false;
     private GeneratorEnginer enginer;
+    private boolean isArrayToList = false;
 
     public void reset(String mainClsName, Project proj, PsiDirectory dir) {
         path.clear();
@@ -28,8 +29,9 @@ public class JSONParser {
         enginer = new GeneratorEnginer(proj, dir);
     }
 
-    public void init(String pkg, String[] its) {
+    public void init(String pkg, String[] its, boolean isArrayToList) {
         enginer.init(pkg, its);
+        this.isArrayToList = isArrayToList;
     }
 
     public void setGenSample(boolean has) {
@@ -49,9 +51,11 @@ public class JSONParser {
         while (keys.hasNext()) {
             key = keys.next();
             value = json.get(key);
+            key = ClassNameUtil.getName(key);
             if (value instanceof JSONObject) {
-                append("public " + suffixToUppercase(key) + " " + key + ";\n");
-                push(suffixToUppercase(key));
+                String validName = ClassNameUtil.getName(suffixToUppercase(key));
+                append("public " + validName + " " + key + ";\n");
+                push(validName);
                 current = (JSONObject) value;
                 if (current.keySet().size() > 0) {
                     decodeJSONObject(current);
@@ -61,7 +65,7 @@ public class JSONParser {
                         last1 = path.get(path.size() - 2);
                     }
                     enginer.preGen(path.peek(), last1);
-                    append("// TODO: complemented needed maybe\n");
+                    append("// TODO: complemented needed maybe.");
                     Logger.warn("file " + path.peek() + ".java generate success but maybe have some error");
                     path.pop();
                 }
@@ -69,20 +73,46 @@ public class JSONParser {
                 JSONArray v = (JSONArray) value;
                 if (v.size() > 0 && !(v.get(0) instanceof JSONObject)) {
                     //处理基本数据类型数组和String数组
-                    if (isNumeric(v.get(0).toString())) {
-                        if (v.get(0).toString().length() > 6 || key.contains("Id") || key.contains("id")) {
-                            append("public long[] " + key + ";\n");
+                    if (value == null || String.valueOf(value).equals("")) {
+                        if (isArrayToList) {
+                            append("public List<Object> " + key + ";\n");
                         } else {
-                            append("public int[] " + key + ";\n");
+                            append("public Object[] " + key + ";\n");
+                        }
+                    } else if (isNumeric(v.get(0).toString())) {
+                        if (v.get(0).toString().length() > 6 || key.contains("Id") || key.contains("id")) {
+                            if (isArrayToList) {
+                                append("public List<Long> " + key + ";\n");
+                            } else {
+                                append("public long[] " + key + ";\n");
+                            }
+                        } else {
+                            if (isArrayToList) {
+                                append("public List<Integer> " + key + ";\n");
+                            } else {
+                                append("public int[] " + key + ";\n");
+                            }
                         }
                     } else if (v.get(0).toString().equals("true") || value.toString().equals("false")) {
-                        append("public boolean[] " + key + ";\n");
+                        if (isArrayToList) {
+                            append("public List<Boolean> " + key + ";\n");
+                        } else {
+                            append("public boolean[] " + key + ";\n");
+                        }
                     } else {
-                        append("public String[] " + key + ";\n");
+                        if (isArrayToList) {
+                            append("public List<String> " + key + ";\n");
+                        } else {
+                            append("public String[] " + key + ";\n");
+                        }
                     }
                 } else {
                     //处理对象数组
-                    append("public " + suffixToUppercase(key) + "Item[] " + key + ";\n");
+                    if (isArrayToList) {
+                        append("public List<" + suffixToUppercase(key) + "Item>" + key + ";\n");
+                    } else {
+                        append("public " + suffixToUppercase(key) + "Item[] " + key + ";\n");
+                    }
                 }
                 push(suffixToUppercase(key));
                 decodeJSONArray((JSONArray) value);
@@ -169,7 +199,7 @@ public class JSONParser {
     }
 
     private void push(String name) {
-        String uniqueName = name;
+        String uniqueName = ClassNameUtil.getName(name);
         if (allNodes.contains(name)) {
             uniqueName = path.peek() + name;
         }

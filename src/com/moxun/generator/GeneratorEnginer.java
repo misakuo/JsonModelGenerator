@@ -47,14 +47,45 @@ public class GeneratorEnginer {
                     protected void run(@NotNull Result result) throws Throwable {
                         PsiClass dist = dataSet.get(clsName);
                         if (s.startsWith("//")) {
-                            // TODO: issues here.
-                            //PsiComment comment = factory.createCommentFromText(s, null);
-                            //dist.add(comment);
-                            Logger.error("Class " + dist.getQualifiedName() + " has no fields, you need checking it maybe.");
+                            PsiElement comment = factory.createCommentFromText(s, dist);
+                            dist.addBefore(comment,dist.getRBrace());
                         } else {
                             String r = s.replaceAll("-", "_");
                             PsiField field = factory.createFieldFromText(r, dist);
                             dist.add(field);
+                        }
+
+                        if (s.contains("public List<")) {
+                            PsiImportStatement[] imports = ((PsiJavaFile) dist.getContainingFile()).getImportList().getImportStatements();
+                            if (imports != null) {
+                                boolean isAdded = false;
+                                for (PsiImportStatement importStatement : imports) {
+                                    if (importStatement.getQualifiedName().equals("java.util.List")) {
+                                        isAdded = true;
+                                    }
+                                }
+                                if (!isAdded) {
+                                    GlobalSearchScope searchScope = GlobalSearchScope.allScope(project);
+                                    PsiClass[] psiClasses = PsiShortNamesCache.getInstance(project).getClassesByName("List", searchScope);
+                                    for (PsiClass psiClass : psiClasses) {
+                                        if (psiClass.getQualifiedName().equals("java.util.List")) {
+                                            PsiImportStatement importStatement = factory.createImportStatement(psiClass);
+                                            ((PsiJavaFile) dist.getContainingFile()).getImportList().add(importStatement);
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else {
+                                GlobalSearchScope searchScope = GlobalSearchScope.allScope(project);
+                                PsiClass[] psiClasses = PsiShortNamesCache.getInstance(project).getClassesByName("List", searchScope);
+                                for (PsiClass psiClass : psiClasses) {
+                                    if (psiClass.getQualifiedName().equals("java.util.List")) {
+                                        PsiImportStatement importStatement = factory.createImportStatement(psiClass);
+                                        ((PsiJavaFile) dist.getContainingFile()).getImportList().add(importStatement);
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 }.execute();

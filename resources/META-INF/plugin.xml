@@ -1,12 +1,13 @@
 <idea-plugin version="2">
   <id>com.moxun.generetor</id>
   <name>JSON Model Generator</name>
-  <version>0.4.1</version>
+  <version>0.4.2</version>
   <vendor email="furmint@foxmail.com">moxun</vendor>
 
   <description><![CDATA[
-      A JSON model generator, get json string from URL and transforming it to Java class<br>
+      Tool to covert JSON string to Java class.<br>
       <br>
+      * Support get JSON string from URL or user's input.<br>
       * Support data conversion library like fastjson.<br>
       * Support auto implementation Java interface.<br>
       * Support field type inference.<br><br>
@@ -17,9 +18,9 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <b>NEXT</b><br>
-      Support parsing JSON Array to List<T>;<br>
-      <br><br>
+      <b>0.4.2</b><br>
+      Replaced with a new icon;<br>
+      Support parsing JSON Array to List<E>;<br>
       <b>0.4.1</b><br>
       Fixed conflicts of the same name parameter elements,you can using <a href="http://www.mrtao.net/wp-json/posts">this case</a> to testing;<br>
       <b>0.4.0</b><br>
@@ -64,8 +65,8 @@
 
   <actions>
     <!-- Add your actions here -->
-    <action class="com.moxun.generator.Generator" id="moxun.generator" text="Model Generator"
-            description="Model Generator doge doge doge" icon="/icons/icon.gif">
+    <action class="com.moxun.generator.Generator" id="moxun.generator" text="JSON Model Generator"
+            description="Tool for convert JSON string to Java class." icon="/icons/icon.png">
       <add-to-group group-id="ToolsMenu" anchor="last"/>
       <add-to-group group-id="MainToolBar" anchor="last"/>
     </action>
