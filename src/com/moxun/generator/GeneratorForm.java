@@ -46,6 +46,7 @@ public class GeneratorForm {
     private JRadioButton arrayRadioButton;
     private JRadioButton listERadioButton;
     private JLabel status;
+    private JTextField rootName;
 
     private Project project;
     private List<JTextField> textFields = new ArrayList<JTextField>();
@@ -134,12 +135,8 @@ public class GeneratorForm {
                 status.setText("Start generating……");
                 status.paintImmediately(status.getBounds());
                 if (check()) {
-                    if (pkgText.getText().split("\\.").length > 0) {
-                        String[] tmp = pkgText.getText().split("\\.");
-                        mainClassName = tmp[tmp.length - 1];
-                        StringBuilder sb = new StringBuilder(mainClassName);
-                        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-                        mainClassName = sb.toString();
+                    if (rootName.getText() != null && rootName.getText().length() > 0) {
+                        mainClassName = rootName.getText();
                     }
 
                     JSONObject response;
@@ -172,7 +169,7 @@ public class GeneratorForm {
                     status.setText("Start parsing JSON……");
                     status.paintImmediately(status.getBounds());
 
-                    parser.init(pkgText.getText(), implement, listERadioButton.isSelected());
+                    parser.init(mainClassName, pkgText.getText(), implement, listERadioButton.isSelected());
                     parser.setGenSample(generatorSampleCheckBox.isSelected());
                     parser.decodeJSONObject(dist);
 
@@ -271,7 +268,9 @@ public class GeneratorForm {
         VirtualFile virtualFile = FileChooser.chooseFile(descriptor, project, null);
         if (virtualFile != null) {
             PsiDirectory directory = PsiDirectoryFactory.getInstance(project).createDirectory(virtualFile);
-            parser.reset(directory.getName(), project, directory);
+            mainClassName = directory.getName();
+            rootName.setText(mainClassName);
+            parser.reset(project, directory);
             String path = virtualFile.getPath();
             String pkg = "";
             dirPath.setText(path);

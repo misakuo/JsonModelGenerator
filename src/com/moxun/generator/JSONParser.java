@@ -22,14 +22,14 @@ public class JSONParser {
     private GeneratorEnginer enginer;
     private boolean isArrayToList = false;
 
-    public void reset(String mainClsName, Project proj, PsiDirectory dir) {
+    public void reset(Project proj, PsiDirectory dir) {
         path.clear();
         allNodes.clear();
-        push(suffixToUppercase(mainClsName));
         enginer = new GeneratorEnginer(proj, dir);
     }
 
-    public void init(String pkg, String[] its, boolean isArrayToList) {
+    public void init(String mainClassName, String pkg, String[] its, boolean isArrayToList) {
+        push(suffixToUppercase(mainClassName));
         enginer.init(pkg, its);
         this.isArrayToList = isArrayToList;
     }
