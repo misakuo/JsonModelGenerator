@@ -66,46 +66,16 @@ public class JSONParser {
                     }
                     enginer.preGen(path.peek(), last1);
                     append("// TODO: complemented needed maybe.");
-                    Logger.warn("file " + path.peek() + ".java generate success but maybe have some error");
+                    Logger.warn("Success to generating file " + path.peek() + ".java but it have no field");
                     path.pop();
                 }
             } else if (value instanceof JSONArray) {
                 JSONArray v = (JSONArray) value;
                 if (v.size() > 0 && !(v.get(0) instanceof JSONObject)) {
+                    String firstValue = String.valueOf(v.get(0));
                     //处理基本数据类型数组和String数组
-                    if (value == null || String.valueOf(value).equals("")) {
-                        if (isArrayToList) {
-                            append("public List<Object> " + key + ";\n");
-                        } else {
-                            append("public Object[] " + key + ";\n");
-                        }
-                    } else if (isNumeric(v.get(0).toString())) {
-                        if (v.get(0).toString().length() > 6 || key.contains("Id") || key.contains("id")) {
-                            if (isArrayToList) {
-                                append("public List<Long> " + key + ";\n");
-                            } else {
-                                append("public long[] " + key + ";\n");
-                            }
-                        } else {
-                            if (isArrayToList) {
-                                append("public List<Integer> " + key + ";\n");
-                            } else {
-                                append("public int[] " + key + ";\n");
-                            }
-                        }
-                    } else if (v.get(0).toString().equals("true") || value.toString().equals("false")) {
-                        if (isArrayToList) {
-                            append("public List<Boolean> " + key + ";\n");
-                        } else {
-                            append("public boolean[] " + key + ";\n");
-                        }
-                    } else {
-                        if (isArrayToList) {
-                            append("public List<String> " + key + ";\n");
-                        } else {
-                            append("public String[] " + key + ";\n");
-                        }
-                    }
+                    String field = "public " + getArrayType(inferValueType(key, firstValue, true), isArrayToList) + " " + key + ";\n";
+                    append(field);
                 } else {
                     //处理对象数组
                     if (isArrayToList) {
@@ -119,19 +89,7 @@ public class JSONParser {
             } else {
                 //处理基本数据类型和String
                 String field = null;
-                if (value == null || String.valueOf(value).equals("")) {
-                    field = "public Object " + key + ";";
-                } else if (isNumeric(value.toString())) {
-                    if (value.toString().length() > 6 || key.contains("Id") || key.contains("id")) {
-                        field = "public long " + key + ";";
-                    } else {
-                        field = "public int " + key + ";";
-                    }
-                } else if (value.toString().equals("true") || value.toString().equals("false")) {
-                    field = "public boolean " + key + ";";
-                } else {
-                    field = "public String " + key + ";";
-                }
+                field = "public " + inferValueType(key, value.toString(), false) + " " + key + ";";
                 if (needGenSample) {
                     String v = String.valueOf(value);
                     v = v.replaceAll("\n", "");
@@ -144,9 +102,65 @@ public class JSONParser {
             }
         }
 
-        Logger.info("file " + path.peek() + ".java generate success");
+        Logger.info("Success to generating file " + path.peek() + ".java");
         if (!path.isEmpty()) {
             path.pop();
+        }
+    }
+
+    private String inferValueType(String key, String value, boolean formArray) {
+        String type = "String";
+        if (isNumeric(value)) {
+            if (isInteger(value)) {
+                if (value.length() > 8 || key.contains("Id") || key.contains("id") || key.contains("ID")) {
+                    if (formArray) {
+                        return "Long";
+                    }
+                    return "long";
+                } else {
+                    if (formArray) {
+                        return "Integer";
+                    }
+                    return "int";
+                }
+            } else {
+                String[] tmp = value.split("\\.");
+                int fLength = 0;
+                if (tmp.length > 1) {
+                    fLength = value.split("\\.")[1].length();
+                } else {
+                    Logger.error(value);
+                }
+
+                if (fLength > 8) {
+                    if (formArray) {
+                        return "Double";
+                    } else {
+                        return "double";
+                    }
+                } else {
+                    if (formArray) {
+                        return "Float";
+                    } else {
+                        return "float";
+                    }
+                }
+            }
+        } else if (value.equals("true") || value.equals("false")) {
+            if (formArray) {
+                return "Boolean";
+            } else {
+                return "boolean";
+            }
+        }
+        return type;
+    }
+
+    private String getArrayType(String baseType, boolean isArrayToList) {
+        if (isArrayToList) {
+            return "List<" + baseType + ">";
+        } else {
+            return baseType + "[]";
         }
     }
 
@@ -189,8 +203,14 @@ public class JSONParser {
         return sb.toString();
     }
 
+    //正负整数,浮点数
     public boolean isNumeric(String str) {
-        Pattern pattern = Pattern.compile("[0-9]*");
+        Pattern pattern = Pattern.compile("-?[0-9]+\\.?[0-9]*");
+        return pattern.matcher(str).matches();
+    }
+
+    private boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("-?[0-9]+");
         return pattern.matcher(str).matches();
     }
 

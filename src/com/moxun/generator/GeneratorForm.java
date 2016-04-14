@@ -269,7 +269,11 @@ public class GeneratorForm {
         if (virtualFile != null) {
             PsiDirectory directory = PsiDirectoryFactory.getInstance(project).createDirectory(virtualFile);
             mainClassName = directory.getName();
-            rootName.setText(mainClassName);
+
+            char[] chars = mainClassName.toCharArray();
+            chars[0] = Character.toUpperCase(chars[0]);
+            rootName.setText(String.valueOf(chars));
+
             parser.reset(project, directory);
             String path = virtualFile.getPath();
             String pkg = "";
@@ -282,9 +286,9 @@ public class GeneratorForm {
             basePath = path + "/";
             pkgText.setText(pkg);
 
-            Logger.info("got path " + path);
+            Logger.info("Target path " + path);
         } else {
-            Logger.warn("got path null");
+            Logger.warn("Empty target path!");
         }
         frame.setAlwaysOnTop(true);
         frame.setVisible(true);
