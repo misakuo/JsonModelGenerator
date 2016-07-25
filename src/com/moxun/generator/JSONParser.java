@@ -2,6 +2,7 @@ package com.moxun.generator;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
+import net.sf.ezmorph.array.DoubleArrayMorpher;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -72,9 +73,9 @@ public class JSONParser {
             } else if (value instanceof JSONArray) {
                 JSONArray v = (JSONArray) value;
                 if (v.size() > 0 && !(v.get(0) instanceof JSONObject)) {
-                    String firstValue = String.valueOf(v.get(0));
+                    Object firstValue = v.get(0);
                     //处理基本数据类型数组和String数组
-                    String field = "public " + getArrayType(inferValueType(key, firstValue, true), isArrayToList) + " " + key + ";\n";
+                    String field = "public " + getArrayType(decisionValueType(key, firstValue, true), isArrayToList) + " " + key + ";\n";
                     append(field);
                 } else {
                     //处理对象数组
@@ -89,7 +90,7 @@ public class JSONParser {
             } else {
                 //处理基本数据类型和String
                 String field = null;
-                field = "public " + inferValueType(key, value.toString(), false) + " " + key + ";";
+                field = "public " + decisionValueType(key, value, false) + " " + key + ";";
                 if (needGenSample) {
                     String v = String.valueOf(value);
                     v = v.replaceAll("\n", "");
@@ -108,7 +109,25 @@ public class JSONParser {
         }
     }
 
-    private String inferValueType(String key, String value, boolean formArray) {
+    private String decisionValueType(/*not uesd*/String key, Object value, boolean formArray) {
+        if (formArray) {
+            return value.getClass().getSimpleName();
+        } else {
+            if (value instanceof Integer) {
+                return "int";
+            } else if (value instanceof Long) {
+                return "long";
+            } else if (value instanceof Double) {
+                return "double";
+            } else if (value instanceof Boolean) {
+                return "boolean";
+            }
+        }
+        return "String";
+    }
+
+    @Deprecated
+    private String __inferValueType(String key, String value, boolean formArray) {
         String type = "String";
         if (isNumeric(value)) {
             if (isInteger(value)) {
