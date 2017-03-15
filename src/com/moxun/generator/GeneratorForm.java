@@ -46,6 +46,8 @@ public class GeneratorForm {
     private JRadioButton listERadioButton;
     private JLabel status;
     private JTextField rootName;
+    private JCheckBox generateGetterCheckBox;
+    private JCheckBox generateSetterCheckBox;
 
     private Project project;
     private List<JTextField> textFields = new ArrayList<JTextField>();
