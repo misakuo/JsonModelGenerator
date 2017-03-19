@@ -172,6 +172,8 @@ public class GeneratorForm {
 
                     parser.init(mainClassName, pkgText.getText(), implement, listERadioButton.isSelected());
                     parser.setGenSample(generatorSampleCheckBox.isSelected());
+                    parser.setGenGetter(generateGetterCheckBox.isSelected());
+                    parser.setGenSetter(generateSetterCheckBox.isSelected());
                     parser.decodeJSONObject(dist);
 
                     status.setText("Generating complete.");

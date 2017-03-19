@@ -2,7 +2,6 @@ package com.moxun.generator;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import net.sf.ezmorph.array.DoubleArrayMorpher;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -17,11 +16,13 @@ import java.util.regex.Pattern;
  * Created by moxun on 15/12/9.
  */
 public class JSONParser {
-    private Stack<String> path = new Stack<String>();
-    private List<String> allNodes = new ArrayList<String>();
+    private Stack<String> path = new Stack<>();
+    private List<String> allNodes = new ArrayList<>();
     private boolean needGenSample = false;
     private GeneratorEnginer enginer;
     private boolean isArrayToList = false;
+    private boolean genGetter;
+    private boolean genSetter;
 
     public void reset(Project proj, PsiDirectory dir) {
         path.clear();
@@ -55,7 +56,8 @@ public class JSONParser {
             key = ClassNameUtil.getName(key);
             if (value instanceof JSONObject) {
                 String validName = ClassNameUtil.getName(suffixToUppercase(key));
-                append("public " + validName + " " + key + ";\n");
+                String modifier = getModifier();
+                append(modifier + validName + " " + key + ";\n");
                 push(validName);
                 current = (JSONObject) value;
                 if (current.keySet().size() > 0) {
@@ -75,22 +77,22 @@ public class JSONParser {
                 if (v.size() > 0 && !(v.get(0) instanceof JSONObject)) {
                     Object firstValue = v.get(0);
                     //处理基本数据类型数组和String数组
-                    String field = "public " + getArrayType(decisionValueType(key, firstValue, true), isArrayToList) + " " + key + ";\n";
+                    String field = getModifier() + getArrayType(decisionValueType(key, firstValue, true), isArrayToList) + " " + key + ";\n";
                     append(field);
                 } else {
                     //处理对象数组
                     if (isArrayToList) {
-                        append("public List<" + suffixToUppercase(key) + "Item>" + key + ";\n");
+                        append(getModifier() + "List<" + suffixToUppercase(key) + "Item>" + key + ";\n");
                     } else {
-                        append("public " + suffixToUppercase(key) + "Item[] " + key + ";\n");
+                        append(getModifier() + suffixToUppercase(key) + "Item[] " + key + ";\n");
                     }
                 }
                 push(suffixToUppercase(key));
                 decodeJSONArray((JSONArray) value);
             } else {
                 //处理基本数据类型和String
-                String field = null;
-                field = "public " + decisionValueType(key, value, false) + " " + key + ";";
+                String field = getModifier();
+                field += decisionValueType(key, value, false) + " " + key + ";";
                 if (needGenSample) {
                     String v = String.valueOf(value);
                     v = v.replaceAll("\n", "");
@@ -106,6 +108,14 @@ public class JSONParser {
         Logger.info("Success to generating file " + path.peek() + ".java");
         if (!path.isEmpty()) {
             path.pop();
+        }
+    }
+
+    private String getModifier() {
+        if (!genGetter && !genSetter) {
+            return "public ";
+        } else {
+            return "private ";
         }
     }
 
@@ -185,18 +195,18 @@ public class JSONParser {
 
     public void decodeJSONArray(JSONArray jsonArray) {
 
-//        //是否需要遍历？
-//        for (item in jsonArray) {
-//            if (item instanceof JSONObject) {
-//                push(path.peek() + "Item")
-//                decodeJSONObject(item)
-//            } else if (item instanceof JSONArray) {
-//                push("array" + index + "->")
-//                decodeJSONArray(item)
-//            } else {
-//
-//            }
-//        }
+        //        //是否需要遍历？
+        //        for (item in jsonArray) {
+        //            if (item instanceof JSONObject) {
+        //                push(path.peek() + "Item")
+        //                decodeJSONObject(item)
+        //            } else if (item instanceof JSONArray) {
+        //                push("array" + index + "->")
+        //                decodeJSONArray(item)
+        //            } else {
+        //
+        //            }
+        //        }
 
         //数组选择其中一个元素出来进行解析就OK
         Object item = jsonArray.get(0);
@@ -254,5 +264,15 @@ public class JSONParser {
 
         allNodes.add(uniqueName);
         path.push(uniqueName);
+    }
+
+    void setGenGetter(boolean genGetter) {
+        this.genGetter = genGetter;
+        enginer.setGenGetter(genGetter);
+    }
+
+    void setGenSetter(boolean genSetter) {
+        this.genSetter = genSetter;
+        enginer.setGenSetter(genSetter);
     }
 }
