@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
  * Created by moxun on 15/12/9.
  */
 public class JSONParser {
-    private Stack<String> path = new Stack<>();
-    private List<String> allNodes = new ArrayList<>();
+    private Stack<String> path = new Stack<String>();
+    private List<String> allNodes = new ArrayList<String>();
     private boolean needGenSample = false;
-    private GeneratorEnginer enginer;
+    private GeneratorEngine engine;
     private boolean isArrayToList = false;
     private boolean genGetter;
     private boolean genSetter;
@@ -27,12 +27,12 @@ public class JSONParser {
     public void reset(Project proj, PsiDirectory dir) {
         path.clear();
         allNodes.clear();
-        enginer = new GeneratorEnginer(proj, dir);
+        engine = new GeneratorEngine(proj, dir);
     }
 
     public void init(String mainClassName, String pkg, String[] its, boolean isArrayToList) {
         push(suffixToUppercase(mainClassName));
-        enginer.init(pkg, its);
+        engine.init(pkg, its);
         this.isArrayToList = isArrayToList;
     }
 
@@ -40,7 +40,8 @@ public class JSONParser {
         needGenSample = has;
     }
 
-    public void decodeJSONObject(JSONObject json) {
+    public String decodeJSONObject(JSONObject json) {
+        String className = null;
         Iterator<String> keys = json.keys();
         JSONObject current = null;
         Object value;
@@ -49,7 +50,7 @@ public class JSONParser {
         if (path.size() > 1) {
             last = path.get(path.size() - 2);
         }
-        enginer.preGen(path.peek(), last);
+        className = engine.preGen(path.peek(), last);
         while (keys.hasNext()) {
             key = keys.next();
             value = json.get(key);
@@ -67,7 +68,7 @@ public class JSONParser {
                     if (path.size() > 1) {
                         last1 = path.get(path.size() - 2);
                     }
-                    enginer.preGen(path.peek(), last1);
+                    engine.preGen(path.peek(), last1);
                     append("// TODO: complemented needed maybe.");
                     Logger.warn("Success to generating file " + path.peek() + ".java but it have no field");
                     path.pop();
@@ -109,6 +110,7 @@ public class JSONParser {
         if (!path.isEmpty()) {
             path.pop();
         }
+        return className;
     }
 
     private String getModifier() {
@@ -244,7 +246,7 @@ public class JSONParser {
     }
 
     public void append(String field) {
-        enginer.append(field, path.peek());
+        engine.append(field, path.peek());
     }
 
     private void push(String name) {
@@ -268,11 +270,11 @@ public class JSONParser {
 
     void setGenGetter(boolean genGetter) {
         this.genGetter = genGetter;
-        enginer.setGenGetter(genGetter);
+        engine.setGenGetter(genGetter);
     }
 
     void setGenSetter(boolean genSetter) {
         this.genSetter = genSetter;
-        enginer.setGenSetter(genSetter);
+        engine.setGenSetter(genSetter);
     }
 }

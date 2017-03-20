@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import net.sf.json.JSONArray;
@@ -174,14 +174,14 @@ public class GeneratorForm {
                     parser.setGenSample(generatorSampleCheckBox.isSelected());
                     parser.setGenGetter(generateGetterCheckBox.isSelected());
                     parser.setGenSetter(generateSetterCheckBox.isSelected());
-                    parser.decodeJSONObject(dist);
+                    String className = parser.decodeJSONObject(dist);
 
                     status.setText("Generating complete.");
                     status.paintImmediately(status.getBounds());
 
                     Messages.showInfoMessage(project, "Generating success!", "Success");
                     frame.dispose();
-                    File file = new File(basePath + mainClassName + ".java");
+                    File file = new File(basePath + className + ".java");
                     if (file.exists()) {
                         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
                         if (virtualFile != null) {
@@ -268,7 +268,7 @@ public class GeneratorForm {
 
     private void showFileChoicer() {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
-        VirtualFile virtualFile = FileChooser.chooseFile(descriptor, WindowManagerEx.getInstanceEx().findVisibleFrame(), project, null);
+        VirtualFile virtualFile = FileChooser.chooseFile(descriptor, WindowManager.getInstance().findVisibleFrame(), project, null);
         if (virtualFile != null) {
             PsiDirectory directory = PsiDirectoryFactory.getInstance(project).createDirectory(virtualFile);
             mainClassName = directory.getName();

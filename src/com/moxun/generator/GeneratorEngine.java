@@ -17,7 +17,7 @@ import java.util.Map;
  * Generating code
  * Created by moxun on 15/12/9.
  */
-public class GeneratorEnginer {
+public class GeneratorEngine {
     private Map<String, PsiClass> dataSet = new HashMap<String, PsiClass>();
     private Project project;
     private PsiDirectory directory;
@@ -27,7 +27,7 @@ public class GeneratorEnginer {
     private boolean genGetter;
     private boolean genSetter;
 
-    public GeneratorEnginer(Project proj, PsiDirectory dir) {
+    public GeneratorEngine(Project proj, PsiDirectory dir) {
         dataSet.clear();
         project = proj;
         directory = dir;
@@ -104,7 +104,8 @@ public class GeneratorEnginer {
         });
     }
 
-    public void preGen(String name, String last) {
+    public String preGen(String name, String last) {
+        String className = name;
         final PsiFile psiFile = directory.findFile(name + ".java");
         String clazzName = name;
         if (psiFile != null) {
@@ -115,6 +116,7 @@ public class GeneratorEnginer {
                     if (directory.findFile(clazzName + i + ".java") == null) {
                         Logger.warn("File [" + clazzName + ".java" + "] already exists, assign [" + clazzName + i + "] to current class.");
                         clazzName = clazzName + i;
+                        className = clazzName;
                         break;
                     }
                 }
@@ -169,6 +171,7 @@ public class GeneratorEnginer {
                 }
             }
         }
+        return className;
     }
 
     private String getReturnStatement(PsiType type) {
