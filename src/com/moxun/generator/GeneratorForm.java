@@ -1,6 +1,5 @@
 package com.moxun.generator;
 
-import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -9,9 +8,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
-import com.intellij.util.FileContentUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -47,6 +46,8 @@ public class GeneratorForm {
     private JRadioButton listERadioButton;
     private JLabel status;
     private JTextField rootName;
+    private JCheckBox generateGetterCheckBox;
+    private JCheckBox generateSetterCheckBox;
 
     private Project project;
     private List<JTextField> textFields = new ArrayList<JTextField>();
@@ -171,6 +172,8 @@ public class GeneratorForm {
 
                     parser.init(mainClassName, pkgText.getText(), implement, listERadioButton.isSelected());
                     parser.setGenSample(generatorSampleCheckBox.isSelected());
+                    parser.setGenGetter(generateGetterCheckBox.isSelected());
+                    parser.setGenSetter(generateSetterCheckBox.isSelected());
                     parser.decodeJSONObject(dist);
 
                     status.setText("Generating complete.");
@@ -265,7 +268,7 @@ public class GeneratorForm {
 
     private void showFileChoicer() {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
-        VirtualFile virtualFile = FileChooser.chooseFile(descriptor, project, null);
+        VirtualFile virtualFile = FileChooser.chooseFile(descriptor, WindowManagerEx.getInstanceEx().findVisibleFrame(), project, null);
         if (virtualFile != null) {
             PsiDirectory directory = PsiDirectoryFactory.getInstance(project).createDirectory(virtualFile);
             mainClassName = directory.getName();

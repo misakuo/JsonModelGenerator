@@ -1,5 +1,6 @@
 package com.moxun.generator;
 
+import com.intellij.codeInsight.generation.GenerateMembersUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -23,6 +24,8 @@ public class GeneratorEnginer {
     private PsiElementFactory factory;
     private String pkgName;
     private String[] inters;
+    private boolean genGetter;
+    private boolean genSetter;
 
     public GeneratorEnginer(Project proj, PsiDirectory dir) {
         dataSet.clear();
@@ -48,11 +51,19 @@ public class GeneratorEnginer {
                         PsiClass dist = dataSet.get(clsName);
                         if (s.startsWith("//")) {
                             PsiElement comment = factory.createCommentFromText(s, dist);
-                            dist.addBefore(comment,dist.getRBrace());
+                            dist.addBefore(comment, dist.getRBrace());
                         } else {
                             String r = s.replaceAll("-", "_");
                             PsiField field = factory.createFieldFromText(r, dist);
                             dist.add(field);
+                            if (genGetter) {
+                                PsiMethod getter = GenerateMembersUtil.generateGetterPrototype(field);
+                                dist.add(getter);
+                            }
+                            if (genSetter) {
+                                PsiMethod setter = GenerateMembersUtil.generateSetterPrototype(field);
+                                dist.add(setter);
+                            }
                         }
 
                         if (s.contains("public List<")) {
@@ -171,5 +182,13 @@ public class GeneratorEnginer {
         } else {
             return "null";
         }
+    }
+
+    void setGenGetter(boolean genGetter) {
+        this.genGetter = genGetter;
+    }
+
+    void setGenSetter(boolean genSetter) {
+        this.genSetter = genSetter;
     }
 }
