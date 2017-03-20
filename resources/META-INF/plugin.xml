@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.moxun.generetor</id>
   <name>JSON Model Generator</name>
-  <version>0.4.5</version>
+  <version>0.5.0</version>
   <vendor email="furmint@foxmail.com">moxun</vendor>
 
   <description><![CDATA[
@@ -10,6 +10,7 @@
       * Support get JSON string from URL or user's input.<br>
       * Support data conversion library like fastjson.<br>
       * Support auto implementation Java interface.<br>
+      * Support generate getter and setter.<br>
       * Support field type inference.<br><br>
       <a href="https://github.com/misakuo/JsonModelGenerator">Sourcecode and Tutorial</a><br>
       <a href="https://github.com/misakuo/JsonModelGenerator/issues">Bug report</a><br>
@@ -18,6 +19,8 @@
     ]]></description>
 
   <change-notes><![CDATA[
+      <b>0.5.0</b><br>
+      Support generate getter and setter;<br>
       <b>0.4.5</b><br>
       Modify value type inference rules;<br>
       <b>0.4.4</b><br>
