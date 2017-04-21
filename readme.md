@@ -8,6 +8,7 @@
 - 支持字段值类型推断；    
 - 支持默认 import 和默认接口实现；  
 - 支持将类型为 JSONObject 和 JSONArray 的子元素拆分为单独的实体类；
+- 支持为每个字段生成getter和setter
 
 ## 安装  
 1. [从这里](https://github.com/misakuo/JsonModelGenerator/raw/master/ModelGenerator.zip)下载 ModelGenerator.zip 文件或在 IDE 中搜索插件 "JSON Model Generator"  
@@ -50,9 +51,9 @@
 **Excited!**
 
 ## 后续计划  
-1. 自动生成getter和setter   
+~~~1. 自动生成getter和setter   
 2. 支持用户输入json string  
-3. 使用List<E>替代数组  
+3. 使用List<E>替代数组~~~  
 
 ## 结语  
 你还在对着 json 串一个个抠字段写 model 么？ 不要再让变量名写错一个字母导致出现灵异错误的事情发生，快装上这个插件吧！毕竟它的 ICON 也是这么提神醒脑，蛤蛤
