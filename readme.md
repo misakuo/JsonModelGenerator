@@ -52,8 +52,8 @@
 
 ## Todos  
 - [x] 自动生成getter和setter   
-- [ ] 支持用户输入json string 
-- [ ] 使用List<E>替代数组  
+- [x] 支持用户输入json string 
+- [x] 使用List<E>替代数组  
 
 ## 结语  
 你还在对着 json 串一个个抠字段写 model 么？ 不要再让变量名写错一个字母导致出现灵异错误的事情发生，快装上这个插件吧！毕竟它的 ICON 也是这么提神醒脑，蛤蛤
